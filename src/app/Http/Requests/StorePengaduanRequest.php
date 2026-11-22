@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePengaduanRequest extends FormRequest
 {
@@ -18,7 +19,7 @@ class StorePengaduanRequest extends FormRequest
             'tanggal_pengaduan' => ['required', 'date'],
             'sumber_laporan'    => ['required', 'in:span_lapor,manual'],
             'jenis_aduan'       => ['required', 'array', 'min:1'],
-            'jenis_aduan.*'     => ['string', 'in:pencemaran_air,pencemaran_udara,pencemaran_limbah_b3,pencemaran_limbah_non_b3,pencemaran_sampah,pencemaran_lainnya'],
+            'jenis_aduan.*'     => ['string', Rule::exists('master_jenis_pengaduan', 'kode')],
             'uraian_pengaduan'  => ['required', 'string', 'min:20'],
             'lokasi_kejadian'   => ['nullable', 'string'],
             'kecamatan_id'      => ['nullable', 'exists:master_kecamatan,id'],
@@ -62,8 +63,9 @@ class StorePengaduanRequest extends FormRequest
             'jenis_terlapor.required'    => 'Jenis terlapor wajib dipilih.',
             'tanggal_pengaduan.required' => 'Tanggal pengaduan wajib diisi.',
             'sumber_laporan.required'    => 'Sumber laporan wajib dipilih.',
-            'jenis_aduan.required'       => 'Jenis aduan wajib dipilih minimal 1.',
-            'jenis_aduan.min'            => 'Pilih minimal 1 jenis aduan.',
+            'jenis_aduan.required'       => 'Jenis pengaduan wajib dipilih minimal 1.',
+            'jenis_aduan.min'            => 'Pilih minimal 1 jenis pengaduan.',
+            'jenis_aduan.*.exists'       => 'Jenis pengaduan yang dipilih tidak valid.',
             'uraian_pengaduan.required'  => 'Uraian pengaduan wajib diisi.',
             'uraian_pengaduan.min'       => 'Uraian pengaduan minimal 20 karakter.',
             'dokumen_pendukung.max'      => 'Ukuran dokumen maksimal 5MB.',

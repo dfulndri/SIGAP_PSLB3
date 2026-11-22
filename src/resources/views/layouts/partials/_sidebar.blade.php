@@ -70,6 +70,11 @@
             </a>
         </div>
 
+        <a href="{{ route('admin.jenis-pengaduan.index') }}"
+            class="sb-link {{ request()->routeIs('admin.jenis-pengaduan.*') ? 'active' : '' }}">
+            <i class="bi bi-tags-fill"></i><span>Jenis Pengaduan</span>
+        </a>
+
         {{-- ── PENGADUAN ──────────────────────────────────────── --}}
         <div class="sb-sec">Pengaduan</div>
         <a href="{{ route('admin.pengaduan.index') }}"

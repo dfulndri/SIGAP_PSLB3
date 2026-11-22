@@ -70,6 +70,11 @@
             </a>
         </div>
 
+        <a href="<?php echo e(route('admin.jenis-pengaduan.index')); ?>"
+            class="sb-link <?php echo e(request()->routeIs('admin.jenis-pengaduan.*') ? 'active' : ''); ?>">
+            <i class="bi bi-tags-fill"></i><span>Jenis Pengaduan</span>
+        </a>
+
         
         <div class="sb-sec">Pengaduan</div>
         <a href="<?php echo e(route('admin.pengaduan.index')); ?>"

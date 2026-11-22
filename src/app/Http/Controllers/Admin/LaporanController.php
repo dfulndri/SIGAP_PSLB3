@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Pengaduan;
 use App\Models\MasterKecamatan;
+use App\Models\MasterKategoriPengaduan;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -17,6 +18,7 @@ class LaporanController extends Controller
         if ($request->filled('sampai'))       $query->whereDate('tanggal_pengaduan', '<=', $request->sampai);
         if ($request->filled('status'))       $query->where('status', $request->status);
         if ($request->filled('kecamatan_id')) $query->where('kecamatan_id', $request->kecamatan_id);
+        if ($request->filled('jenis'))        $query->filterJenis($request->jenis);
 
         $pengaduans = $query->paginate(20)->withQueryString();
 
@@ -25,26 +27,24 @@ class LaporanController extends Controller
         if ($request->filled('dari'))         $baseQuery->whereDate('tanggal_pengaduan', '>=', $request->dari);
         if ($request->filled('sampai'))       $baseQuery->whereDate('tanggal_pengaduan', '<=', $request->sampai);
         if ($request->filled('kecamatan_id')) $baseQuery->where('kecamatan_id', $request->kecamatan_id);
+        if ($request->filled('jenis'))        $baseQuery->filterJenis($request->jenis);
 
         $stats = [
             'total'      => (clone $baseQuery)->count(),
             'baru'       => (clone $baseQuery)->where('status', 'pengaduan_baru')->count(),
-            'proses'     => (clone $baseQuery)->whereIn('status', ['menunggu_disposisi','didisposisikan','verifikasi_lapangan'])->count(),
+            'proses'     => (clone $baseQuery)->whereIn('status', ['menunggu_disposisi', 'didisposisikan', 'verifikasi_lapangan'])->count(),
             'verifikasi' => (clone $baseQuery)->where('status', 'verifikasi_selesai')->count(),
-            'selesai'    => (clone $baseQuery)->whereIn('status', ['selesai','arsip'])->count(),
+            'selesai'    => (clone $baseQuery)->whereIn('status', ['selesai', 'arsip'])->count(),
         ];
 
-        // Per jenis aduan
-        $allPengaduan = (clone $baseQuery)->pluck('jenis_aduan');
-        $perJenis = [];
-        foreach ($allPengaduan as $jenis) {
-            if (is_array($jenis)) {
-                foreach ($jenis as $j) {
-                    $perJenis[$j] = ($perJenis[$j] ?? 0) + 1;
-                }
-            }
-        }
-        arsort($perJenis);
+        // Per jenis pengaduan + ringkasan per kategori
+        $hitung       = Pengaduan::hitungJenis((clone $baseQuery)->pluck('jenis_aduan'));
+        $perJenis     = $hitung['jenis'];
+        $perKategori  = $hitung['kategori'];
+        $meta         = Pengaduan::jenisAduanMeta();
+        $jenisLabels  = array_map(fn($k) => $meta[$k]['nama'] ?? ucwords(str_replace('_', ' ', $k)), array_keys($perJenis));
+        $jenisColors  = array_map(fn($k) => $meta[$k]['warna'] ?? '#64748b', array_keys($perJenis));
+        $kategoriList = MasterKategoriPengaduan::orderBy('urutan')->orderBy('nama')->get();
 
         // Per kecamatan
         $perKecamatan = (clone $baseQuery)
@@ -59,7 +59,15 @@ class LaporanController extends Controller
         $kecamatans = MasterKecamatan::orderBy('nama_kecamatan')->get();
 
         return view('admin.laporan.index', compact(
-            'pengaduans', 'stats', 'perJenis', 'perKecamatan', 'kecamatans'
+            'pengaduans',
+            'stats',
+            'perJenis',
+            'jenisLabels',
+            'jenisColors',
+            'perKategori',
+            'kategoriList',
+            'perKecamatan',
+            'kecamatans'
         ));
     }
 
@@ -80,6 +88,7 @@ class LaporanController extends Controller
         if ($request->filled('dari'))     $query->whereDate('tanggal_pengaduan', '>=', $request->dari);
         if ($request->filled('sampai'))   $query->whereDate('tanggal_pengaduan', '<=', $request->sampai);
         if ($request->filled('status'))   $query->where('status', $request->status);
+        if ($request->filled('jenis'))    $query->filterJenis($request->jenis);
 
         $pengaduans = $query->get();
 

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PelaporController;
 use App\Http\Controllers\Admin\TerlaporController;
 use App\Http\Controllers\Admin\WilayahController;
+use App\Http\Controllers\Admin\JenisPengaduanController;
 use App\Http\Controllers\Admin\ProfilInstansiController;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
@@ -68,6 +69,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('terlapor',                [TerlaporController::class, 'store'])->name('terlapor.store');
     Route::patch('terlapor/{terlapor}',    [TerlaporController::class, 'update'])->name('terlapor.update');
     Route::delete('terlapor/{terlapor}',   [TerlaporController::class, 'destroy'])->name('terlapor.destroy');
+
+    // ── Master Data: Kategori & Jenis Pengaduan ──────────────────
+    Route::get('jenis-pengaduan', [JenisPengaduanController::class, 'index'])->name('jenis-pengaduan.index');
+    Route::post('jenis-pengaduan/kategori',               [JenisPengaduanController::class, 'storeKategori'])->name('jenis-pengaduan.kategori.store');
+    Route::patch('jenis-pengaduan/kategori/{kategori}',   [JenisPengaduanController::class, 'updateKategori'])->name('jenis-pengaduan.kategori.update');
+    Route::delete('jenis-pengaduan/kategori/{kategori}',  [JenisPengaduanController::class, 'destroyKategori'])->name('jenis-pengaduan.kategori.destroy');
+    Route::post('jenis-pengaduan/jenis',                  [JenisPengaduanController::class, 'storeJenis'])->name('jenis-pengaduan.jenis.store');
+    Route::patch('jenis-pengaduan/jenis/{jenis}',         [JenisPengaduanController::class, 'updateJenis'])->name('jenis-pengaduan.jenis.update');
+    Route::delete('jenis-pengaduan/jenis/{jenis}',        [JenisPengaduanController::class, 'destroyJenis'])->name('jenis-pengaduan.jenis.destroy');
 
     // ── Manajemen Wilayah ────────────────────────────────────────
     Route::get('wilayah', [WilayahController::class, 'index'])->name('wilayah.index');

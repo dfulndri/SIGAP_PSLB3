@@ -145,11 +145,12 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="info-label">Jenis Aduan</div>
+                            <div class="info-label">Jenis Pengaduan</div>
                             <div class="info-value">
-                                @foreach ($pengaduan->jenis_aduan_labels as $ja)
-                                    <span class="badge-kat me-1">{{ $ja }}</span>
-                                @endforeach
+                                @include('partials.jenis-badges', [
+                                    'pengaduan' => $pengaduan,
+                                    'stack' => false,
+                                ])
                             </div>
                         </div>
                         <div class="col-12">

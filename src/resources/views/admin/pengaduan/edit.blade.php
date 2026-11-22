@@ -60,22 +60,9 @@
                         @enderror
                     </div>
                     <div class="col-12">
-                        <label class="form-label">Jenis Aduan <span class="text-danger">*</span></label>
-                        <div class="d-flex flex-wrap gap-3">
-                            @php $currentJenis = old('jenis_aduan', $pengaduan->jenis_aduan ?? []); @endphp
-                            @foreach (\App\Models\Pengaduan::$jenisAduanList as $key => $label)
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="jenis_aduan[]"
-                                        value="{{ $key }}" id="ja_{{ $key }}"
-                                        {{ in_array($key, $currentJenis) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="ja_{{ $key }}"
-                                        style="font-size:.84rem">{{ $label }}</label>
-                                </div>
-                            @endforeach
-                        </div>
-                        @error('jenis_aduan')
-                            <div class="text-danger" style="font-size:.82rem">{{ $message }}</div>
-                        @enderror
+                        @include('admin.pengaduan._jenis-aduan', [
+                            'selected' => old('jenis_aduan', $pengaduan->jenis_aduan ?? []),
+                        ])
                     </div>
                     <div class="col-12">
                         <label class="form-label">Uraian Pengaduan <span class="text-danger">*</span></label>

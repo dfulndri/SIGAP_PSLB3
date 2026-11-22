@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -7,6 +8,7 @@ use App\Models\VerifikasiLapangan;
 use App\Models\BeritaAcara;
 use App\Models\User;
 use App\Models\MasterKecamatan;
+use App\Models\MasterKategoriPengaduan;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -36,21 +38,17 @@ class DashboardController extends Controller
         $chartData = [];
         for ($i = 1; $i <= 12; $i++) $chartData[] = $monthly[$i] ?? 0;
 
-        // Per jenis aduan - need to handle JSON field
-        $allPengaduan = Pengaduan::pluck('jenis_aduan');
-        $jenisCount = [];
-        foreach ($allPengaduan as $jenis) {
-            if (is_array($jenis)) {
-                foreach ($jenis as $j) {
-                    $jenisCount[$j] = ($jenisCount[$j] ?? 0) + 1;
-                }
-            }
-        }
-        arsort($jenisCount);
-        $jenisLabels = array_map(
-            fn($k) => Pengaduan::$jenisAduanList[$k] ?? ucwords(str_replace('_', ' ', $k)),
+        // Per jenis pengaduan (kolom JSON) + ringkasan per kategori
+        $hitung        = Pengaduan::hitungJenis(Pengaduan::pluck('jenis_aduan'));
+        $jenisCount    = $hitung['jenis'];
+        $kategoriCount = $hitung['kategori'];
+        $meta          = Pengaduan::jenisAduanMeta();
+        $jenisLabels   = array_map(
+            fn($k) => $meta[$k]['nama'] ?? ucwords(str_replace('_', ' ', $k)),
             array_keys($jenisCount)
         );
+        $jenisColors   = array_map(fn($k) => $meta[$k]['warna'] ?? '#64748b', array_keys($jenisCount));
+        $kategoriList  = MasterKategoriPengaduan::orderBy('urutan')->orderBy('nama')->get();
 
         // Per kecamatan
         $perKecamatan = Pengaduan::with('kecamatan')
@@ -84,9 +82,20 @@ class DashboardController extends Controller
         $kecamatans = MasterKecamatan::orderBy('nama_kecamatan')->get();
 
         return view('admin.dashboard.index', compact(
-            'stats', 'statusCounts', 'chartData', 'tahun', 'tahunList',
-            'jenisCount', 'jenisLabels', 'perKecamatan', 'mapData',
-            'recentPengaduan', 'kecamatans'
+            'stats',
+            'statusCounts',
+            'chartData',
+            'tahun',
+            'tahunList',
+            'jenisCount',
+            'jenisLabels',
+            'jenisColors',
+            'kategoriCount',
+            'kategoriList',
+            'perKecamatan',
+            'mapData',
+            'recentPengaduan',
+            'kecamatans'
         ));
     }
 

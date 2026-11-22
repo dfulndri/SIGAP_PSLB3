@@ -33,6 +33,7 @@ class PengaduanController extends Controller
 
         if ($request->filled('status'))       $query->where('status', $request->status);
         if ($request->filled('kecamatan_id')) $query->where('kecamatan_id', $request->kecamatan_id);
+        if ($request->filled('jenis'))        $query->filterJenis($request->jenis);
 
         $pengaduans = $query->paginate(15)->withQueryString();
         $kecamatans = MasterKecamatan::orderBy('nama_kecamatan')->get();

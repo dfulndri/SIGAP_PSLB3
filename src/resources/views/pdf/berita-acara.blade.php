@@ -311,15 +311,8 @@
             ? \Illuminate\Support\Str::of($v->jam_verifikasi)->substr(0, 5)->replace(':', '.')
             : '—';
         $zona = $profil->zona_waktu ?? 'WIB';
-        $jenisAduan = is_array($p?->jenis_aduan)
-            ? implode(
-                ', ',
-                array_map(
-                    fn($k) => \App\Models\Pengaduan::$jenisAduanList[$k] ?? ucwords(str_replace('_', ' ', $k)),
-                    $p->jenis_aduan,
-                ),
-            )
-            : '—';
+        $jenisAduan =
+            is_array($p?->jenis_aduan) && count($p->jenis_aduan) ? implode(', ', $p->jenis_aduan_labels) : '—';
         $namaTerlapor = $pj?->nama_perusahaan ?? ($p?->terlapor?->nama ?? '—');
         $jenisTerlapor = $p?->terlapor?->jenis_terlapor ?? 'perorangan';
         $pjLabel = [
