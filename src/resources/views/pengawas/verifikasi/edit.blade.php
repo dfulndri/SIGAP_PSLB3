@@ -43,9 +43,7 @@
                     <div>
                         <code>{{ $pengaduan->nomor_pengaduan }}</code>
                         <span class="ms-2" style="font-size:.85rem">— {{ $pengaduan->terlapor?->nama }}</span>
-                        @foreach ($pengaduan->jenisAduanLabels as $lbl)
-                            <span class="ms-1 badge-kat">{{ $lbl }}</span>
-                        @endforeach
+                        <span class="ms-1">@include('partials.jenis-badges', ['pengaduan' => $pengaduan, 'stack' => false])</span>
                     </div>
                 </div>
             </div>

@@ -47,8 +47,8 @@ class VerifikasiController extends Controller
             'pengaduan_id'           => ['required', 'exists:pengaduan,id'],
             'tanggal_verifikasi'     => ['required', 'date'],
             'jam_verifikasi'         => ['nullable', 'string'],
-            'koordinat_lat'          => ['nullable', 'numeric'],
-            'koordinat_lng'          => ['nullable', 'numeric'],
+            'koordinat_lat'          => ['nullable', 'numeric', 'between:-90,90'],
+            'koordinat_lng'          => ['nullable', 'numeric', 'between:-180,180'],
             'informasi_administrasi' => ['nullable', 'string'],
             'fakta_temuan'           => ['nullable', 'string'],
             'saran_tindak_lanjut'    => ['nullable', 'string'],
@@ -57,8 +57,11 @@ class VerifikasiController extends Controller
             'saksi.*.nama'           => ['nullable', 'string'],
             'foto.*'                 => ['nullable', 'file', 'image', 'max:5120'],
             'video'                  => ['nullable', 'file', 'mimes:mp4,avi,mov,wmv', 'max:51200'],
-            'pj_kbli_id' => 'nullable|exists:master_kbli,id',
-        ]);
+            'pj_kbli_id'             => ['nullable', 'exists:master_kbli,id'],
+            'pj_koordinat_lat'       => ['nullable', 'numeric', 'between:-90,90'],
+            'pj_koordinat_lng'       => ['nullable', 'numeric', 'between:-180,180'],
+            'pj_email'               => ['nullable', 'email', 'max:150'],
+        ], $this->pesanValidasi());
 
         $newId = null;
 
@@ -167,6 +170,18 @@ class VerifikasiController extends Controller
             403,
             'Pengaduan ini sudah diarsipkan oleh Admin dan tidak bisa diedit lagi.'
         );
+
+        $request->validate([
+            'tanggal_verifikasi'     => ['required', 'date'],
+            'koordinat_lat'          => ['nullable', 'numeric', 'between:-90,90'],
+            'koordinat_lng'          => ['nullable', 'numeric', 'between:-180,180'],
+            'tenggat_tindak_lanjut'  => ['nullable', 'date'],
+            'foto.*'                 => ['nullable', 'file', 'image', 'max:5120'],
+            'pj_kbli_id'             => ['nullable', 'exists:master_kbli,id'],
+            'pj_koordinat_lat'       => ['nullable', 'numeric', 'between:-90,90'],
+            'pj_koordinat_lng'       => ['nullable', 'numeric', 'between:-180,180'],
+            'pj_email'               => ['nullable', 'email', 'max:150'],
+        ], $this->pesanValidasi());
 
         DB::transaction(function () use ($request, $verifikasi) {
             $verifikasi->update([
@@ -277,6 +292,24 @@ class VerifikasiController extends Controller
 
         return redirect()->route('pengawas.berita-acara.show', $verifikasi->beritaAcara()->first())
             ->with('success', 'Verifikasi selesai! Berita Acara otomatis dibuat.');
+    }
+
+    /** Pesan validasi berbahasa Indonesia untuk form verifikasi. */
+    private function pesanValidasi(): array
+    {
+        return [
+            'koordinat_lat.numeric'    => 'Koordinat Latitude lokasi verifikasi harus berupa angka, contoh: -6.154588.',
+            'koordinat_lat.between'    => 'Koordinat Latitude lokasi verifikasi harus antara -90 sampai 90.',
+            'koordinat_lng.numeric'    => 'Koordinat Longitude lokasi verifikasi harus berupa angka, contoh: 106.574295.',
+            'koordinat_lng.between'    => 'Koordinat Longitude lokasi verifikasi harus antara -180 sampai 180.',
+            'pj_koordinat_lat.numeric' => 'Koordinat Latitude penanggung jawab harus berupa angka, contoh: -6.154588.',
+            'pj_koordinat_lat.between' => 'Koordinat Latitude penanggung jawab harus antara -90 sampai 90.',
+            'pj_koordinat_lng.numeric' => 'Koordinat Longitude penanggung jawab harus berupa angka, contoh: 106.574295.',
+            'pj_koordinat_lng.between' => 'Koordinat Longitude penanggung jawab harus antara -180 sampai 180.',
+            'pj_email.email'           => 'Format email penanggung jawab tidak valid.',
+            'pj_kbli_id.exists'        => 'KBLI yang dipilih tidak valid.',
+            'tanggal_verifikasi.required' => 'Tanggal verifikasi wajib diisi.',
+        ];
     }
 
     public function deleteFoto(VerifikasiLapangan $verifikasi, DokumentasiFoto $foto)

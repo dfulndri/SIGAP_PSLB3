@@ -230,11 +230,12 @@
                             <div class="info-value">{{ $pengaduan->kecamatan?->nama_kecamatan ?? '—' }}</div>
                         </div>
                         <div class="col-12">
-                            <div class="info-label">Jenis Aduan</div>
+                            <div class="info-label">Jenis Pengaduan</div>
                             <div class="info-value">
-                                @foreach ($pengaduan->jenis_aduan_labels as $ja)
-                                    <span class="badge-kat me-1">{{ $ja }}</span>
-                                @endforeach
+                                @include('partials.jenis-badges', [
+                                    'pengaduan' => $pengaduan,
+                                    'stack' => false,
+                                ])
                             </div>
                         </div>
                         <div class="col-12">
@@ -292,19 +293,21 @@
                                         class="d-inline"
                                         onsubmit="return confirm('Selesaikan verifikasi ini? Berita Acara akan dibuat otomatis.')">
                                         @csrf @method('PATCH')
-                                        <button type="submit" class="btn btn-xs btn-success"><i class="bi bi-check2-all"></i>
+                                        <button type="submit" class="btn btn-xs btn-success"><i
+                                                class="bi bi-check2-all"></i>
                                             Selesaikan &amp; Buat BA</button>
                                     </form>
                                 @endif
                             @endif
-                            @if($v->beritaAcara)
+                            @if ($v->beritaAcara)
                                 <a href="{{ route('pengawas.berita-acara.show', $v->beritaAcara) }}"
                                     class="btn btn-xs btn-outline-maroon"><i class="bi bi-file-text"></i> Lihat BA</a>
                                 <a href="{{ route('pengawas.berita-acara.pdf', $v->beritaAcara) }}"
                                     class="btn btn-xs btn-success"><i class="bi bi-download"></i> PDF</a>
                             @endif
-                            @if($isArsip)
-                                <span class="badge bg-secondary"><i class="bi bi-lock-fill"></i> Diarsipkan — Terkunci</span>
+                            @if ($isArsip)
+                                <span class="badge bg-secondary"><i class="bi bi-lock-fill"></i> Diarsipkan —
+                                    Terkunci</span>
                             @endif
                         </div>
                     </div>

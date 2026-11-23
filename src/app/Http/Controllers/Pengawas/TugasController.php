@@ -18,6 +18,9 @@ class TugasController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
+        if ($request->filled('jenis')) {
+            $query->filterJenis($request->jenis);
+        }
 
         $pengaduans = $query->paginate(15)->withQueryString();
         return view('pengawas.tugas.index', compact('pengaduans'));

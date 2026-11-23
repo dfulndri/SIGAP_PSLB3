@@ -35,9 +35,7 @@
                     <div>
                         <code><?php echo e($pengaduan->nomor_pengaduan); ?></code>
                         <span class="ms-2" style="font-size:.85rem">— <?php echo e($pengaduan->terlapor?->nama); ?></span>
-                        <?php $__currentLoopData = $pengaduan->jenisAduanLabels; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lbl): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <span class="ms-1 badge-kat"><?php echo e($lbl); ?></span>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <span class="ms-1"><?php echo $__env->make('partials.jenis-badges', ['pengaduan' => $pengaduan, 'stack' => false], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?></span>
                     </div>
                 </div>
             </div>
