@@ -6,7 +6,7 @@
     </button>
     {{-- Breadcrumb --}}
     <div class="tb-crumb">
-      <span>SIPPLH</span>
+      <span>SIGAP PSLB3</span>
       <span class="mx-1 text-muted">/</span>
       <span class="cur">@yield('breadcrumb', 'Dashboard')</span>
     </div>

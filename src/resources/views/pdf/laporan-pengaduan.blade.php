@@ -201,7 +201,7 @@
             </table>
 
             <div class="footer">
-                SIPPLH — Sistem Informasi Pengelolaan Pengaduan dan Verifikasi Lapangan Lingkungan Hidup<br>
+                SIGAP PSLB3 — Sistem Informasi Pengaduan dan Pengawasan Sampah dan Limbah B3<br>
                 Dinas Lingkungan Hidup dan Kebersihan Kabupaten Tangerang
             </div>
         </div>

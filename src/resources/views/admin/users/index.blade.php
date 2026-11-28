@@ -7,7 +7,7 @@
 <div class="page-hd d-flex align-items-center justify-content-between flex-wrap gap-2">
   <div>
     <h1 class="page-ttl">Manajemen User</h1>
-    <p class="page-stl">Kelola akun pengguna sistem SIPPLH.</p>
+    <p class="page-stl">Kelola akun pengguna sistem SIGAP PSLB3.</p>
   </div>
   <a href="{{ route('admin.users.create') }}" class="btn btn-maroon">
     <i class="bi bi-person-plus-fill me-1"></i> Tambah User

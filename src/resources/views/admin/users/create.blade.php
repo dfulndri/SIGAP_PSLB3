@@ -7,7 +7,7 @@
 <div class="page-hd d-flex align-items-center justify-content-between">
   <div>
     <h1 class="page-ttl">Tambah Pengguna</h1>
-    <p class="page-stl">Daftarkan akun pengguna baru ke sistem SIPPLH.</p>
+    <p class="page-stl">Daftarkan akun pengguna baru ke sistem SIGAP PSLB3.</p>
   </div>
   <a href="{{ route('admin.users.index') }}" class="btn btn-sm btn-outline-secondary">
     <i class="bi bi-arrow-left me-1"></i> Kembali

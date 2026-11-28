@@ -2,7 +2,7 @@
     <div class="sb-brand">
         <div class="sb-icon"><i class="bi bi-shield-fill-check"></i></div>
         <div>
-            <div class="sb-name">SIPPLH</div>
+            <div class="sb-name">SIGAP PSLB3</div>
             <div class="sb-sub">DLHK Kab. Tangerang</div>
         </div>
     </div>
@@ -132,7 +132,7 @@
                 <i class="bi bi-box-arrow-left"></i><span>Keluar</span>
             </button>
         </form>
-        <div class="sb-ver">SIPPLH v2.0 &copy; {{ date('Y') }}</div>
+        <div class="sb-ver">SIGAP PSLB3 v2.0 &copy; {{ date('Y') }}</div>
     </div>
 </nav>
 <div id="sidebar-overlay" onclick="closeSidebar()"

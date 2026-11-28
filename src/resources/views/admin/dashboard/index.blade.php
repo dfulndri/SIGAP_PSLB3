@@ -75,7 +75,7 @@
     <div class="page-hd d-flex align-items-center justify-content-between flex-wrap gap-2">
         <div>
             <h1 class="page-ttl">Dashboard</h1>
-            <p class="page-stl">Selamat datang, <strong>{{ auth()->user()->name }}</strong>. Ringkasan data SIPPLH.</p>
+            <p class="page-stl">Selamat datang, <strong>{{ auth()->user()->name }}</strong>. Ringkasan data SIGAP PSLB3.</p>
         </div>
         <div style="font-size:.78rem;color:var(--muted)" class="d-none d-md-block">
             <i class="bi bi-calendar3 me-1"></i>{{ now()->isoFormat('dddd, D MMMM Y') }}
