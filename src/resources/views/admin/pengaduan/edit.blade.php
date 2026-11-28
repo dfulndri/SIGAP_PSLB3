@@ -250,40 +250,42 @@
             </div>
             <div class="cp-body">
                 <div class="row g-3">
-                    <div class="col-12">
-                        <label class="form-label">Alamat Lokasi</label>
-                        <textarea name="lokasi_kejadian" class="form-control" rows="2">{{ old('lokasi_kejadian', $pengaduan->lokasi_kejadian) }}</textarea>
+                    <div class="col-lg-7">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Alamat Lokasi</label>
+                                <textarea name="lokasi_kejadian" class="form-control" rows="3">{{ old('lokasi_kejadian', $pengaduan->lokasi_kejadian) }}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Kecamatan</label>
+                                <select name="kecamatan_id" class="form-select kec-select">
+                                    <option value="">— Pilih —</option>
+                                    @foreach ($kecamatans as $k)
+                                        <option value="{{ $k->id }}"
+                                            {{ old('kecamatan_id', $pengaduan->kecamatan_id) == $k->id ? 'selected' : '' }}>
+                                            {{ $k->nama_kecamatan }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Kelurahan</label>
+                                <select name="kelurahan_id" class="form-select" id="kelurahanSelect">
+                                    <option value="">— Pilih kecamatan dulu —</option>
+                                    @if ($pengaduan->kelurahan)
+                                        <option value="{{ $pengaduan->kelurahan_id }}" selected>
+                                            {{ $pengaduan->kelurahan->nama_kelurahan }}</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Kecamatan</label>
-                        <select name="kecamatan_id" class="form-select kec-select">
-                            <option value="">— Pilih —</option>
-                            @foreach ($kecamatans as $k)
-                                <option value="{{ $k->id }}"
-                                    {{ old('kecamatan_id', $pengaduan->kecamatan_id) == $k->id ? 'selected' : '' }}>
-                                    {{ $k->nama_kecamatan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Kelurahan</label>
-                        <select name="kelurahan_id" class="form-select" id="kelurahanSelect">
-                            <option value="">— Pilih kecamatan dulu —</option>
-                            @if ($pengaduan->kelurahan)
-                                <option value="{{ $pengaduan->kelurahan_id }}" selected>
-                                    {{ $pengaduan->kelurahan->nama_kelurahan }}</option>
-                            @endif
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Latitude</label>
-                        <input type="number" name="koordinat_lat" class="form-control" step="any"
-                            value="{{ old('koordinat_lat', $pengaduan->koordinat_lat) }}">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Longitude</label>
-                        <input type="number" name="koordinat_lng" class="form-control" step="any"
-                            value="{{ old('koordinat_lng', $pengaduan->koordinat_lng) }}">
+                    <div class="col-lg-5">
+                        @include('partials.peta-lokasi', [
+                            'id' => 'petaPengaduan',
+                            'lat' => old('koordinat_lat', $pengaduan->koordinat_lat),
+                            'lng' => old('koordinat_lng', $pengaduan->koordinat_lng),
+                            'hint' => 'Titik ini menjadi lokasi tujuan yang akan dikunjungi pengawas.',
+                        ])
                     </div>
                 </div>
             </div>

@@ -232,36 +232,38 @@
             </div>
             <div class="cp-body">
                 <div class="row g-3">
-                    <div class="col-12">
-                        <label class="form-label">Alamat Lokasi Kejadian</label>
-                        <textarea name="lokasi_kejadian" class="form-control" rows="2" placeholder="Deskripsi lokasi kejadian...">{{ old('lokasi_kejadian') }}</textarea>
+                    <div class="col-lg-7">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Alamat Lokasi Kejadian</label>
+                                <textarea name="lokasi_kejadian" class="form-control" rows="3" placeholder="Deskripsi lokasi kejadian...">{{ old('lokasi_kejadian') }}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Kecamatan</label>
+                                <select name="kecamatan_id" class="form-select kec-select">
+                                    <option value="">— Pilih —</option>
+                                    @foreach ($kecamatans as $k)
+                                        <option value="{{ $k->id }}"
+                                            {{ old('kecamatan_id') == $k->id ? 'selected' : '' }}>{{ $k->nama_kecamatan }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Kelurahan</label>
+                                <select name="kelurahan_id" class="form-select" id="kelurahanSelect">
+                                    <option value="">— Pilih kecamatan dulu —</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Kecamatan</label>
-                        <select name="kecamatan_id" class="form-select kec-select">
-                            <option value="">— Pilih —</option>
-                            @foreach ($kecamatans as $k)
-                                <option value="{{ $k->id }}"
-                                    {{ old('kecamatan_id') == $k->id ? 'selected' : '' }}>{{ $k->nama_kecamatan }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Kelurahan</label>
-                        <select name="kelurahan_id" class="form-select" id="kelurahanSelect">
-                            <option value="">— Pilih kecamatan dulu —</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Latitude</label>
-                        <input type="number" name="koordinat_lat" class="form-control" step="any"
-                            value="{{ old('koordinat_lat') }}" placeholder="-6.xxxx">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Longitude</label>
-                        <input type="number" name="koordinat_lng" class="form-control" step="any"
-                            value="{{ old('koordinat_lng') }}" placeholder="106.xxxx">
+                    <div class="col-lg-5">
+                        @include('partials.peta-lokasi', [
+                            'id' => 'petaPengaduan',
+                            'lat' => old('koordinat_lat'),
+                            'lng' => old('koordinat_lng'),
+                            'hint' => 'Titik ini menjadi lokasi tujuan yang akan dikunjungi pengawas.',
+                        ])
                     </div>
                 </div>
             </div>

@@ -177,6 +177,15 @@
                                 <div class="info-value">{{ $pengaduan->koordinat_lat }}, {{ $pengaduan->koordinat_lng }}
                                 </div>
                             </div>
+                            <div class="col-md-6 mb-2">
+                                @include('partials.peta-lokasi', [
+                                    'id' => 'petaDetail',
+                                    'lat' => $pengaduan->koordinat_lat,
+                                    'lng' => $pengaduan->koordinat_lng,
+                                    'readonly' => true,
+                                    'height' => 220,
+                                ])
+                            </div>
                         @endif
                         @if ($pengaduan->dokumen_pendukung)
                             <div class="col-12">

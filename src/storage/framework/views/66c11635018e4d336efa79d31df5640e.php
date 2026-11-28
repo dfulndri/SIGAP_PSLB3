@@ -74,16 +74,6 @@
                             value="<?php echo e(old('tenggat_tindak_lanjut', now()->addDays(14)->format('Y-m-d'))); ?>">
                         <div class="form-text">Default 14 hari</div>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Koordinat Latitude</label>
-                        <input type="text" name="koordinat_lat" class="form-control"
-                            value="<?php echo e(old('koordinat_lat', $pengaduan->koordinat_lat)); ?>" placeholder="-6.154588">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Koordinat Longitude</label>
-                        <input type="text" name="koordinat_lng" class="form-control"
-                            value="<?php echo e(old('koordinat_lng', $pengaduan->koordinat_lng)); ?>" placeholder="106.574295">
-                    </div>
                 </div>
             </div>
         </div>
@@ -253,17 +243,20 @@
                             <input type="email" name="pj_email" class="form-control" value="<?php echo e(old('pj_email')); ?>">
                         </div>
                     <?php endif; ?>
-                    <div class="col-md-6"><label class="form-label">Koordinat Lat (Kegiatan)</label>
-                        <input type="text" name="pj_koordinat_lat" class="form-control"
-                            value="<?php echo e(old('pj_koordinat_lat')); ?>">
+                    <div class="col-lg-7">
+                        <label class="form-label">Alamat Lokasi Kegiatan</label>
+                        <textarea name="pj_alamat" class="form-control" rows="7"><?php echo e(old('pj_alamat', $pengaduan->lokasi_kejadian ?: $pengaduan->terlapor?->alamat)); ?></textarea>
+                        <div class="form-text">Terisi dari alamat lokasi kejadian yang diinput Admin. Boleh diubah atau
+                            ditambah jika ada keterangan lain.</div>
                     </div>
-                    <div class="col-md-6"><label class="form-label">Koordinat Lng (Kegiatan)</label>
-                        <input type="text" name="pj_koordinat_lng" class="form-control"
-                            value="<?php echo e(old('pj_koordinat_lng')); ?>">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">Alamat Perusahaan</label>
-                        <textarea name="pj_alamat" class="form-control" rows="2"><?php echo e(old('pj_alamat', $pengaduan->terlapor?->alamat)); ?></textarea>
+                    <div class="col-lg-5">
+                        <?php echo $__env->make('partials.peta-lokasi', [
+                            'id' => 'petaVerifikasi',
+                            'lat' => old('koordinat_lat', $pengaduan->koordinat_lat),
+                            'lng' => old('koordinat_lng', $pengaduan->koordinat_lng),
+                            'hint' =>
+                                'Titik awal dari Admin. Ubah hanya jika lokasi di lapangan berbeda. Titik ini dipakai pada Berita Acara.',
+                        ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                     </div>
                 </div>
             </div>

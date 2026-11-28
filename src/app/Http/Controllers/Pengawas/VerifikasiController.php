@@ -58,8 +58,6 @@ class VerifikasiController extends Controller
             'foto.*'                 => ['nullable', 'file', 'image', 'max:5120'],
             'video'                  => ['nullable', 'file', 'mimes:mp4,avi,mov,wmv', 'max:51200'],
             'pj_kbli_id'             => ['nullable', 'exists:master_kbli,id'],
-            'pj_koordinat_lat'       => ['nullable', 'numeric', 'between:-90,90'],
-            'pj_koordinat_lng'       => ['nullable', 'numeric', 'between:-180,180'],
             'pj_email'               => ['nullable', 'email', 'max:150'],
         ], $this->pesanValidasi());
 
@@ -102,7 +100,7 @@ class VerifikasiController extends Controller
                 }
             }
 
-            if ($request->filled('pj_nama_pj')) {
+            if ($request->filled('pj_nama_pj') || $request->filled('pj_alamat')) {
                 PenanggungJawabUsaha::create([
                     'verifikasi_id'     => $v->id,
                     'nama_pj'           => $request->pj_nama_pj,
@@ -114,8 +112,8 @@ class VerifikasiController extends Controller
                     'kbli_id'           => $request->pj_kbli_id,
                     'nib'               => $request->pj_nib,
                     'status_permodalan' => $request->pj_status_permodalan,
-                    'koordinat_lat'     => $request->pj_koordinat_lat,
-                    'koordinat_lng'     => $request->pj_koordinat_lng,
+                    'koordinat_lat'     => $request->koordinat_lat,
+                    'koordinat_lng'     => $request->koordinat_lng,
                     'no_telp'           => $request->pj_no_telp,
                     'email'             => $request->pj_email,
                 ]);
@@ -178,8 +176,6 @@ class VerifikasiController extends Controller
             'tenggat_tindak_lanjut'  => ['nullable', 'date'],
             'foto.*'                 => ['nullable', 'file', 'image', 'max:5120'],
             'pj_kbli_id'             => ['nullable', 'exists:master_kbli,id'],
-            'pj_koordinat_lat'       => ['nullable', 'numeric', 'between:-90,90'],
-            'pj_koordinat_lng'       => ['nullable', 'numeric', 'between:-180,180'],
             'pj_email'               => ['nullable', 'email', 'max:150'],
         ], $this->pesanValidasi());
 
@@ -223,7 +219,7 @@ class VerifikasiController extends Controller
                 }
             }
 
-            if ($request->filled('pj_nama_pj') || $request->filled('pj_nama_perusahaan')) {
+            if ($request->filled('pj_nama_pj') || $request->filled('pj_nama_perusahaan') || $request->filled('pj_alamat')) {
                 PenanggungJawabUsaha::updateOrCreate(
                     ['verifikasi_id' => $verifikasi->id],
                     [
@@ -236,8 +232,8 @@ class VerifikasiController extends Controller
                         'kbli_id'           => $request->pj_kbli_id,
                         'nib'                => $request->pj_nib,
                         'status_permodalan'  => $request->pj_status_permodalan,
-                        'koordinat_lat'      => $request->pj_koordinat_lat,
-                        'koordinat_lng'      => $request->pj_koordinat_lng,
+                        'koordinat_lat'      => $request->koordinat_lat,
+                        'koordinat_lng'      => $request->koordinat_lng,
                         'no_telp'            => $request->pj_no_telp,
                         'email'              => $request->pj_email,
                     ]
@@ -275,6 +271,10 @@ class VerifikasiController extends Controller
             return back()->with('error', 'Tambahkan Tim Verifikator terlebih dahulu.');
         }
 
+        if ($verifikasi->koordinat_lat === null || $verifikasi->koordinat_lng === null) {
+            return back()->with('error', 'Titik lokasi verifikasi belum diisi. Tentukan titik pada peta (menu Edit) sebelum menyelesaikan verifikasi.');
+        }
+
         DB::transaction(function () use ($verifikasi) {
             $verifikasi->update(['status' => 'selesai']);
             $verifikasi->pengaduan->update(['status' => Pengaduan::STATUS_VERIFIKASI_SELESAI]);
@@ -302,10 +302,6 @@ class VerifikasiController extends Controller
             'koordinat_lat.between'    => 'Koordinat Latitude lokasi verifikasi harus antara -90 sampai 90.',
             'koordinat_lng.numeric'    => 'Koordinat Longitude lokasi verifikasi harus berupa angka, contoh: 106.574295.',
             'koordinat_lng.between'    => 'Koordinat Longitude lokasi verifikasi harus antara -180 sampai 180.',
-            'pj_koordinat_lat.numeric' => 'Koordinat Latitude penanggung jawab harus berupa angka, contoh: -6.154588.',
-            'pj_koordinat_lat.between' => 'Koordinat Latitude penanggung jawab harus antara -90 sampai 90.',
-            'pj_koordinat_lng.numeric' => 'Koordinat Longitude penanggung jawab harus berupa angka, contoh: 106.574295.',
-            'pj_koordinat_lng.between' => 'Koordinat Longitude penanggung jawab harus antara -180 sampai 180.',
             'pj_email.email'           => 'Format email penanggung jawab tidak valid.',
             'pj_kbli_id.exists'        => 'KBLI yang dipilih tidak valid.',
             'tanggal_verifikasi.required' => 'Tanggal verifikasi wajib diisi.',

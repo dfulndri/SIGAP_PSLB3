@@ -50,8 +50,8 @@ class VerifikasiController extends Controller
             'pengaduan_id'           => ['required', 'exists:pengaduan,id'],
             'tanggal_verifikasi'     => ['required', 'date'],
             'jam_verifikasi'         => ['nullable', 'string'],
-            'koordinat_lat'          => ['nullable', 'numeric'],
-            'koordinat_lng'          => ['nullable', 'numeric'],
+            'koordinat_lat'          => ['nullable', 'numeric', 'between:-90,90'],
+            'koordinat_lng'          => ['nullable', 'numeric', 'between:-180,180'],
             'informasi_administrasi' => ['nullable', 'string'],
             'fakta_temuan'           => ['nullable', 'string'],
             'saran_tindak_lanjut'    => ['nullable', 'string'],
@@ -60,7 +60,20 @@ class VerifikasiController extends Controller
             'saksi.*.nama'           => ['nullable', 'string', 'max:255'],
             'foto.*'                 => ['nullable', 'file', 'image', 'max:5120'],
             'video'                  => ['nullable', 'file', 'mimes:mp4,avi,mov,wmv', 'max:51200'],
-            'pj_kbli_id' => 'nullable|exists:master_kbli,id',
+            'pj_kbli_id'             => ['nullable', 'exists:master_kbli,id'],
+            'pj_koordinat_lat'       => ['nullable', 'numeric', 'between:-90,90'],
+            'pj_koordinat_lng'       => ['nullable', 'numeric', 'between:-180,180'],
+            'pj_email'               => ['nullable', 'email', 'max:150'],
+        ], [
+            'koordinat_lat.numeric'    => 'Koordinat Latitude harus berupa angka, contoh: -6.154588.',
+            'koordinat_lat.between'    => 'Koordinat Latitude harus antara -90 sampai 90.',
+            'koordinat_lng.numeric'    => 'Koordinat Longitude harus berupa angka, contoh: 106.574295.',
+            'koordinat_lng.between'    => 'Koordinat Longitude harus antara -180 sampai 180.',
+            'pj_koordinat_lat.numeric' => 'Koordinat Latitude penanggung jawab harus berupa angka.',
+            'pj_koordinat_lat.between' => 'Koordinat Latitude penanggung jawab harus antara -90 sampai 90.',
+            'pj_koordinat_lng.numeric' => 'Koordinat Longitude penanggung jawab harus berupa angka.',
+            'pj_koordinat_lng.between' => 'Koordinat Longitude penanggung jawab harus antara -180 sampai 180.',
+            'pj_email.email'           => 'Format email penanggung jawab tidak valid.',
         ]);
 
         $newId = null;
@@ -184,12 +197,27 @@ class VerifikasiController extends Controller
     {
         $request->validate([
             'tanggal_verifikasi'     => ['required', 'date'],
+            'koordinat_lat'          => ['nullable', 'numeric', 'between:-90,90'],
+            'koordinat_lng'          => ['nullable', 'numeric', 'between:-180,180'],
             'informasi_administrasi' => ['nullable', 'string'],
             'fakta_temuan'           => ['nullable', 'string'],
             'saran_tindak_lanjut'    => ['nullable', 'string'],
             'tenggat_tindak_lanjut'  => ['nullable', 'date'],
             'foto.*'                 => ['nullable', 'file', 'image', 'max:5120'],
-            'pj_kbli_id' => 'nullable|exists:master_kbli,id',
+            'pj_kbli_id'             => ['nullable', 'exists:master_kbli,id'],
+            'pj_koordinat_lat'       => ['nullable', 'numeric', 'between:-90,90'],
+            'pj_koordinat_lng'       => ['nullable', 'numeric', 'between:-180,180'],
+            'pj_email'               => ['nullable', 'email', 'max:150'],
+        ], [
+            'koordinat_lat.numeric'    => 'Koordinat Latitude harus berupa angka, contoh: -6.154588.',
+            'koordinat_lat.between'    => 'Koordinat Latitude harus antara -90 sampai 90.',
+            'koordinat_lng.numeric'    => 'Koordinat Longitude harus berupa angka, contoh: 106.574295.',
+            'koordinat_lng.between'    => 'Koordinat Longitude harus antara -180 sampai 180.',
+            'pj_koordinat_lat.numeric' => 'Koordinat Latitude penanggung jawab harus berupa angka.',
+            'pj_koordinat_lat.between' => 'Koordinat Latitude penanggung jawab harus antara -90 sampai 90.',
+            'pj_koordinat_lng.numeric' => 'Koordinat Longitude penanggung jawab harus berupa angka.',
+            'pj_koordinat_lng.between' => 'Koordinat Longitude penanggung jawab harus antara -180 sampai 180.',
+            'pj_email.email'           => 'Format email penanggung jawab tidak valid.',
         ]);
 
         DB::transaction(function () use ($request, $verifikasi) {
@@ -279,6 +307,10 @@ class VerifikasiController extends Controller
     {
         if ($verifikasi->timVerifikator->isEmpty()) {
             return back()->with('error', 'Tambahkan Tim Verifikator terlebih dahulu.');
+        }
+
+        if ($verifikasi->koordinat_lat === null || $verifikasi->koordinat_lng === null) {
+            return back()->with('error', 'Titik lokasi verifikasi belum diisi. Tentukan titik pada peta (menu Edit) sebelum menyelesaikan verifikasi.');
         }
 
         DB::transaction(function () use ($verifikasi) {

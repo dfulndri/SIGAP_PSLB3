@@ -317,37 +317,39 @@ unset($__errorArgs, $__bag); ?>
             </div>
             <div class="cp-body">
                 <div class="row g-3">
-                    <div class="col-12">
-                        <label class="form-label">Alamat Lokasi Kejadian</label>
-                        <textarea name="lokasi_kejadian" class="form-control" rows="2" placeholder="Deskripsi lokasi kejadian..."><?php echo e(old('lokasi_kejadian')); ?></textarea>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Kecamatan</label>
-                        <select name="kecamatan_id" class="form-select kec-select">
-                            <option value="">— Pilih —</option>
-                            <?php $__currentLoopData = $kecamatans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($k->id); ?>"
-                                    <?php echo e(old('kecamatan_id') == $k->id ? 'selected' : ''); ?>><?php echo e($k->nama_kecamatan); ?>
+                    <div class="col-lg-7">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Alamat Lokasi Kejadian</label>
+                                <textarea name="lokasi_kejadian" class="form-control" rows="3" placeholder="Deskripsi lokasi kejadian..."><?php echo e(old('lokasi_kejadian')); ?></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Kecamatan</label>
+                                <select name="kecamatan_id" class="form-select kec-select">
+                                    <option value="">— Pilih —</option>
+                                    <?php $__currentLoopData = $kecamatans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($k->id); ?>"
+                                            <?php echo e(old('kecamatan_id') == $k->id ? 'selected' : ''); ?>><?php echo e($k->nama_kecamatan); ?>
 
-                                </option>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </select>
+                                        </option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Kelurahan</label>
+                                <select name="kelurahan_id" class="form-select" id="kelurahanSelect">
+                                    <option value="">— Pilih kecamatan dulu —</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Kelurahan</label>
-                        <select name="kelurahan_id" class="form-select" id="kelurahanSelect">
-                            <option value="">— Pilih kecamatan dulu —</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Latitude</label>
-                        <input type="number" name="koordinat_lat" class="form-control" step="any"
-                            value="<?php echo e(old('koordinat_lat')); ?>" placeholder="-6.xxxx">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Longitude</label>
-                        <input type="number" name="koordinat_lng" class="form-control" step="any"
-                            value="<?php echo e(old('koordinat_lng')); ?>" placeholder="106.xxxx">
+                    <div class="col-lg-5">
+                        <?php echo $__env->make('partials.peta-lokasi', [
+                            'id' => 'petaPengaduan',
+                            'lat' => old('koordinat_lat'),
+                            'lng' => old('koordinat_lng'),
+                            'hint' => 'Titik ini menjadi lokasi tujuan yang akan dikunjungi pengawas.',
+                        ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                     </div>
                 </div>
             </div>

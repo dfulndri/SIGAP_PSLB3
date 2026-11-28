@@ -341,10 +341,10 @@
                 'pj' => 'Pemilik/Pengelola',
             ],
         ][$jenisTerlapor];
-        $koord =
-            $pj?->koordinat_lat ?? $v?->koordinat_lat
-                ? ($pj?->koordinat_lat ?? $v?->koordinat_lat) . ',' . ($pj?->koordinat_lng ?? $v?->koordinat_lng)
-                : '—';
+        // Titik koordinat = titik hasil verifikasi (diisi pengawas); cadangan: titik penanggung jawab usaha
+        $koordLat = $v?->koordinat_lat ?? $pj?->koordinat_lat;
+        $koordLng = $v?->koordinat_lng ?? $pj?->koordinat_lng;
+        $koord = $koordLat !== null && $koordLng !== null ? $koordLat . ',' . $koordLng : '—';
     @endphp
 
     {{-- ══════ KOP SURAT ══════ --}}

@@ -98,15 +98,13 @@
                             value="{{ old('tenggat_tindak_lanjut', now()->addDays(14)->format('Y-m-d')) }}">
                         <div class="form-text">Default: 14 hari sejak tanggal verifikasi</div>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Koordinat Latitude</label>
-                        <input type="number" step="any" name="koordinat_lat" class="form-control"
-                            value="{{ old('koordinat_lat', $pengaduan->koordinat_lat) }}" placeholder="-6.154588">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Koordinat Longitude</label>
-                        <input type="number" step="any" name="koordinat_lng" class="form-control"
-                            value="{{ old('koordinat_lng', $pengaduan->koordinat_lng) }}" placeholder="106.574295">
+                    <div class="col-lg-6">
+                        @include('partials.peta-lokasi', [
+                            'id' => 'petaVerifikasi',
+                            'lat' => old('koordinat_lat', $pengaduan->koordinat_lat),
+                            'lng' => old('koordinat_lng', $pengaduan->koordinat_lng),
+                            'hint' => 'Terisi dari titik pengaduan. Ubah hanya jika lokasi di lapangan berbeda.',
+                        ])
                     </div>
                 </div>
             </div>

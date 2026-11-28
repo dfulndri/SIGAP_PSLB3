@@ -53,17 +53,13 @@
                         <input type="date" name="tenggat_tindak_lanjut" class="form-control"
                             value="{{ old('tenggat_tindak_lanjut', $verifikasi->tenggat_tindak_lanjut?->format('Y-m-d')) }}">
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Koordinat Latitude</label>
-                        <input type="number" step="any" name="koordinat_lat" class="form-control"
-                            value="{{ old('koordinat_lat', $verifikasi->koordinat_lat ?? $pengaduan->koordinat_lat) }}"
-                            placeholder="-6.154588">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Koordinat Longitude</label>
-                        <input type="number" step="any" name="koordinat_lng" class="form-control"
-                            value="{{ old('koordinat_lng', $verifikasi->koordinat_lng ?? $pengaduan->koordinat_lng) }}"
-                            placeholder="106.574295">
+                    <div class="col-lg-6">
+                        @include('partials.peta-lokasi', [
+                            'id' => 'petaVerifikasi',
+                            'lat' => old('koordinat_lat', $verifikasi->koordinat_lat ?? $pengaduan->koordinat_lat),
+                            'lng' => old('koordinat_lng', $verifikasi->koordinat_lng ?? $pengaduan->koordinat_lng),
+                            'hint' => 'Terisi dari titik pengaduan. Ubah hanya jika lokasi di lapangan berbeda.',
+                        ])
                     </div>
                 </div>
             </div>
@@ -118,8 +114,7 @@
                                         value="{{ old("tim.$i.jabatan", $t->jabatan) }}" placeholder="Jabatan">
                                 </div>
                                 <div class="col-2 col-md-1 text-end">
-                                    <button type="button" class="btn btn-xs btn-outline-danger"
-                                        onclick="removeTim(this)">
+                                    <button type="button" class="btn btn-xs btn-outline-danger" onclick="removeTim(this)">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>

@@ -183,6 +183,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="font-size:.85rem">
+            <i class="bi bi-exclamation-circle me-1"></i>{{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
     {{-- Workflow --}}
     @php
@@ -229,6 +235,20 @@
                             <div class="info-label">Kecamatan</div>
                             <div class="info-value">{{ $pengaduan->kecamatan?->nama_kecamatan ?? '—' }}</div>
                         </div>
+                        @if ($pengaduan->koordinat_lat && $pengaduan->koordinat_lng)
+                            <div class="col-md-6 mb-2">
+                                <div class="info-label">Lokasi Tujuan (titik dari Admin)</div>
+                                <div class="info-value">
+                                    @include('partials.peta-lokasi', [
+                                        'id' => 'petaTujuan',
+                                        'lat' => $pengaduan->koordinat_lat,
+                                        'lng' => $pengaduan->koordinat_lng,
+                                        'readonly' => true,
+                                        'height' => 220,
+                                    ])
+                                </div>
+                            </div>
+                        @endif
                         <div class="col-12">
                             <div class="info-label">Jenis Pengaduan</div>
                             <div class="info-value">
